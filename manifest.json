@@ -1,0 +1,34 @@
+{
+    "name":"Extended Search Results",
+    "description":"this extension adds useful info to your search results",
+    "version":"1",
+    "manifest_version":2,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0EKu403Eu6HVbzBsflCOp69KHn4HrxE5deldJnR16Eo7Oq5artsIZ3ScLQ8cO0QnZ2AfkyPLfW+/tA3CPrc8qOJ3hGq4jiZPPAF7LjdUx7WAKzledV6b/3HQwXiEvTPlQdrUEMiOZZVhKrV3xeEjIMiSBQYXBXvCkWHYhbhTRnt6sJSKICRHttPCv+lxfYTZUr6XzZU7fn8a3PpdqBSpCQNfewWotbKbPNb8t4BQUHPyvn4v9NObE/cCryhCyqu/EtGEdWfuWJt4w87bqQcXKpU4vmqaFdfdO7cinpQyH0S9/TdITZRbuzg4d0jysr5w7UgB19z2NlZaj2liGoB+AQIDAQAB",
+    "permissions": [
+        "https://api.github.com/*",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://www.google.hu/*"],
+            "js": [
+                "script.js"
+            ]
+        }
+    ],
+    "oauth2": {
+        "client_id": "1062166061977-ck220ok2odoh1jl9s1ifj0geupn9v883.apps.googleusercontent.com",
+        "scopes":[""]
+    },
+    "browser_action": {
+        "default_title": "Extended Search Results",
+        "default_icon": "img/icon.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+      "scripts": [
+        "background.js"
+      ],
+      "persistent": false
+    }
+}
