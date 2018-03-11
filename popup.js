@@ -41,11 +41,6 @@ function drawControls(config){
         container.appendChild(createOptionElem(i.id, i.text, i.visible, i.postUrl));
     }
 
-    let removeLink = document.createElement('div');
-    removeLink.textContent = 'Remove stored access token';
-    removeLink.addEventListener('click', () => {chrome.storage.sync.remove('token'); setupInterface()});
-    removeLink.setAttribute('class', 'removeLink');
-    container.appendChild(removeLink);
     all.appendChild(container);
 
     let buttons = document.createElement('div');
@@ -56,9 +51,20 @@ function drawControls(config){
     let resetBtn = document.createElement('button');
     resetBtn.textContent = 'reset to default'
     resetBtn.addEventListener('click', resetDefault);
+    let removeLink = document.createElement('button');
+    removeLink.textContent = 'Remove stored access token';
+    removeLink.addEventListener('click', () => {
+        chrome.storage.sync.remove('token'); 
+        chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+            var activeTab = tabs[0];
+            chrome.tabs.sendMessage(activeTab.id, 'removeToken');
+        });
+        setupInterface();
+    });
 
     buttons.appendChild(applyBtn);
     buttons.appendChild(resetBtn);
+    buttons.appendChild(removeLink);
 
     all.appendChild(buttons);
 }
@@ -114,7 +120,7 @@ function setupInterface() {
             token.innerHTML = `
                 <h2>Setup presonal access token:</h2>
                 <ul>
-                    <li>Go to the <a href="#">Personal access token</a> page</li>
+                    <li>Go to the <span id="token-link" class="link">Personal access token</span> page</li>
                     <li>Click on the <span class="hl">Generate new token</span> button</li>
                     <li>Give any name you like to your token</li>
                     <li>Click <span class="hl">Generate token</span> on the bottom of the page</li>
@@ -128,6 +134,7 @@ function setupInterface() {
             tokenBtn.textContent = 'done';
             token.appendChild(tokenBtn);
             all.appendChild(token);
+            document.getElementById('token-link').addEventListener('click', () => {chrome.tabs.create({url: 'https://github.com/settings/tokens'}); return false;});
         }
     });
 }
@@ -146,6 +153,10 @@ function testToken(){
         if(result.data) {
             console.log('success');
             chrome.storage.sync.set({'token': token}, () => {
+                chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+                    var activeTab = tabs[0];
+                    chrome.tabs.sendMessage(activeTab.id, 'addToken');
+                });
                 setupInterface();
             });
         } else {

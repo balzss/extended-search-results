@@ -84,6 +84,8 @@ let defaultConfig = [
 ];
 
 let config;
+let token;
+let tokenInited = false;
 
 chrome.storage.sync.get('config', (storedConfig) => {
     config = storedConfig.config;
@@ -102,9 +104,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             window.location.reload();
             break;
+        case 'removeToken':
+            tokenInited = false;
+            window.location.reload();
+            break;
+        case 'addToken':
+            tokenInited = true;
+            window.location.reload();
+            break;
     }
 });
-
 
 function requestConfig(owner, repo) {
     return {
@@ -113,7 +122,7 @@ function requestConfig(owner, repo) {
         body: JSON.stringify({ query: githubQuery(owner, repo)}),
         headers: new Headers({
             'Content-Type': 'application/json',
-            'Authorization': 'bearer 4b05d7b5b433f0d8922c3787f54b16962789c04f'
+            'Authorization': 'bearer ' + token
         })
     };
 }
@@ -188,7 +197,15 @@ function getUrl(elem){
     let regexp = '^http(s)?:\/\/github.com(\/[-a-zA-Z0-9@:%_\+.~#?&=]+){2}$'
     if(url.match(new RegExp(regexp))){
         let splitUrl = url.split('/');
-        getGithubInfo(elem, splitUrl[splitUrl.length-2], splitUrl[splitUrl.length-1]);
+
+        if(!token){
+            chrome.storage.sync.get('token', (storedToken) => {
+                token = storedToken.token;
+                getGithubInfo(elem, splitUrl[splitUrl.length-2], splitUrl[splitUrl.length-1]);
+            });
+        } else {
+            getGithubInfo(elem, splitUrl[splitUrl.length-2], splitUrl[splitUrl.length-1]);
+        }
     }
 }
 
@@ -236,4 +253,15 @@ function updateGithuInfo(elem, info){
     elem.innerHTML += inner;
 }
 
-[...document.querySelectorAll('#rso .g')].map(getUrl);
+function run(){
+    if(!token){
+        chrome.storage.sync.get('token', (storedToken) => {
+            token = storedToken.token;
+            if(token) run();
+        });
+    } else {
+        [...document.querySelectorAll('#rso .g')].map(getUrl);
+    }
+}
+
+run();
