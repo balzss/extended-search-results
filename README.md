@@ -31,6 +31,7 @@ A chrome extension that extends your Google search results with customizable inf
 - Check the results by searching for a Github repo
 
 ### TODO/Roadmap:
+- Port it to other browsers
 - Add config file where users can provide their own CSS
 - Add more supported sites like Reddit, Stackexchange, Youtube, etc.
 - Look into OAuth instead of Personal Access Token
