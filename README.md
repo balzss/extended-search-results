@@ -1,6 +1,6 @@
 ### What it is:
 A chrome extension that extends your Google search results with customizable information about Github repositories.
-<p align="center"><a href="https://google.com"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /><a></p>
+<p align="center"><a href="https://chrome.google.com/webstore/detail/extended-search-results/ileojhhpfbcpegbcejekooedcgagggoo"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /><a></p>
 
 ### How it looks:
 ![img alt](screenshot1.png)
@@ -22,7 +22,7 @@ A chrome extension that extends your Google search results with customizable inf
     - Open/Closed/All pull requests
 
 ### How to get started:
-- Install the extension from the [Chrome Web Store]()
+- Install the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/extended-search-results/ileojhhpfbcpegbcejekooedcgagggoo)
 - Provide a Presonal Access Token like so:
 ![token gif](token.gif)
 - Customizable the displayed info by clicking on the extension icon

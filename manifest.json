@@ -1,6 +1,6 @@
 {
     "name":"Extended Search Results",
-    "description":"A chrome extension that extends your Google search results with customizable information about Github repositories.",
+    "description":"Extend your Google search results with customizable information about Github repositories",
     "version": "0.2",
     "manifest_version": 2,
     "permissions": [
