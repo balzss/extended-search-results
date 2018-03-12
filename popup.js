@@ -110,6 +110,7 @@ function setupInterface() {
     all.innerHTML = '';
     chrome.storage.sync.get(['config', 'token'], (storedConfig) => {
         if(storedConfig.token){
+            console.log(storedConfig);
             config = storedConfig.config;
             drawControls(config);
         } else {
@@ -126,7 +127,8 @@ function setupInterface() {
                     <li>Click <span class="hl">Generate token</span> on the bottom of the page</li>
                     <li>Copy and paste the token below:</li>
                 </ul>
-                <input type="text" name="token" id="token-input" placeholder="Paste token here..."/>`
+                <input type="text" name="token" id="token-input" placeholder="Paste token here..."/>
+                <div id="error"></div>`
 
             let tokenBtn = document.createElement('button');
             tokenBtn.setAttribute('id', 'token-done');
@@ -141,6 +143,8 @@ function setupInterface() {
 
 function testToken(){
     let token = document.querySelector('#token-input').value;
+    document.getElementById('error').textContent = '';
+
     fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -160,74 +164,70 @@ function testToken(){
                 setupInterface();
             });
         } else {
-            console.log('error with credentials');
+            document.getElementById('error').textContent = 'Couldn\'t validate token. Please try again!';
+            document.getElementById('token-input').value = '';
         }
     });
 }
 
 setupInterface();
 
-var dragSrcEl = null;
+let dragSrcEl = null;
 
 function handleDragStart(e) {
-  // Target (this) element is the source node.
-  dragSrcEl = this;
+    // Target (this) element is the source node.
+    dragSrcEl = this;
 
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', this.outerHTML);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
 
-  this.classList.add('dragElem');
+    this.classList.add('dragElem');
 }
 function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  this.classList.add('over');
+    if (e.preventDefault) {
+        e.preventDefault(); // Necessary. Allows us to drop.
+    }
+    this.classList.add('over');
 
-  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+    e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
-  return false;
+    return false;
 }
 
 function handleDragEnter(e) {
-  // this / e.target is the current hover target.
+    // this / e.target is the current hover target.
 }
 
 function handleDragLeave(e) {
-  this.classList.remove('over');  // this / e.target is previous target element.
+    this.classList.remove('over');  // this / e.target is previous target element.
 }
 
 function handleDrop(e) {
-  // this/e.target is current target element.
+    // this/e.target is current target element.
 
-  if (e.stopPropagation) {
-    e.stopPropagation(); // Stops some browsers from redirecting.
-  }
+    if (e.stopPropagation) {
+        e.stopPropagation(); // Stops some browsers from redirecting.
+    }
 
-  // Don't do anything if dropping the same column we're dragging.
-  if (dragSrcEl != this) {
-    // Set the source column's HTML to the HTML of the column we dropped on.
-    //alert(this.outerHTML);
-    //dragSrcEl.innerHTML = this.innerHTML;
-    //this.innerHTML = e.dataTransfer.getData('text/html');
-    this.parentNode.removeChild(dragSrcEl);
-    var dropHTML = e.dataTransfer.getData('text/html');
-    this.insertAdjacentHTML('beforebegin',dropHTML);
-    var dropElem = this.previousSibling;
-    addDnDHandlers(dropElem);
-    
-  }
-  this.classList.remove('over');
-  return false;
+    // Don't do anything if dropping the same column we're dragging.
+    if (dragSrcEl != this) {
+        // Set the source column's HTML to the HTML of the column we dropped on.
+        //alert(this.outerHTML);
+        //dragSrcEl.innerHTML = this.innerHTML;
+        //this.innerHTML = e.dataTransfer.getData('text/html');
+        this.parentNode.removeChild(dragSrcEl);
+        let dropHTML = e.dataTransfer.getData('text/html');
+        this.insertAdjacentHTML('beforebegin',dropHTML);
+        let dropElem = this.previousSibling;
+        addDnDHandlers(dropElem);
+
+    }
+    this.classList.remove('over');
+    return false;
 }
 
 function handleDragEnd(e) {
-  // this/e.target is the source node.
-  this.classList.remove('over');
-
-  /*[].forEach.call(cols, function (col) {
-    col.classList.remove('over');
-  });*/
+    this.classList.remove('over');
 }
 
 function addDnDHandlers(elem) {

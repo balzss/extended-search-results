@@ -254,6 +254,12 @@ function updateGithuInfo(elem, info){
 }
 
 function run(){
+    let regexp = '^(http(s)?:\/\/)?(www\.)?google(\.[a-zA-Z]{2,8}){1,2}\/search\?';
+    if(!window.location.href.match(new RegExp(regexp))) {
+        console.log(window.location.href);
+        return;
+    }
+
     if(!token){
         chrome.storage.sync.get('token', (storedToken) => {
             token = storedToken.token;
