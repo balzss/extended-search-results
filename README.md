@@ -1,9 +1,9 @@
 ### What it is:
 A chrome extension that extends your Google search results with customizable information about Github repositories.
-![chrome web store link](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png)
+<div style="text-align:center"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /></div>
 
 ### How it looks:
-<div style="text-align:center"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /></div>
+![img alt](screenshot1.png)
 
 ### Features:
 - You can switch on or off every info field
