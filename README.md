@@ -34,13 +34,6 @@ A chrome extension that extends your Google search results with customizable inf
 - Look into OAuth instead of Personal Access Token
 - Insert the additional information with a smooth animation
 
-### More screenshots:
-![2](screenshot2.png)
-![3](screenshot3.png)
-![4](screenshot4.png)
-![5](screenshot5.png)
-![6](screenshot6.png)
-
 ### Misc:
 - [Licensed under the GPLv3](LICENSE.md)
 - For bug reports, feature requests, suggestions and contribution questions please open an issue
