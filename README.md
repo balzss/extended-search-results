@@ -1,6 +1,6 @@
 ### What it is:
 A chrome extension that extends your Google search results with customizable information about Github repositories.
-<div style="text-align:center"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /></div>
+<p align="center"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /></p>
 
 ### How it looks:
 ![img alt](screenshot1.png)
