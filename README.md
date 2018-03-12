@@ -1,6 +1,6 @@
 ### What it is:
 A chrome extension that extends your Google search results with customizable information about Github repositories.
-<p align="center"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /></p>
+<p align="center"><a href="https://google.com"><img src ="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_340x96.png" /><a></p>
 
 ### How it looks:
 ![img alt](screenshot1.png)
@@ -33,6 +33,13 @@ A chrome extension that extends your Google search results with customizable inf
 - Add more supported sites like Reddit, Stackexchange, Youtube, etc.
 - Look into OAuth instead of Personal Access Token
 - Insert the additional information with a smooth animation
+
+### More screenshots:
+![2](screenshot2.png)
+![3](screenshot3.png)
+![4](screenshot4.png)
+![5](screenshot5.png)
+![6](screenshot6.png)
 
 ### Misc:
 - [Licensed under the GPLv3](LICENSE.md)
