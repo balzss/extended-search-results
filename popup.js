@@ -109,7 +109,13 @@ function createOptionElem(name, text, visible, postUrl){
 function setupInterface() {
     all.innerHTML = '';
     chrome.storage.sync.get(['config', 'token'], (storedConfig) => {
-        if(storedConfig.token){
+        if(!storedConfig.config) {
+            chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+                var activeTab = tabs[0];
+                chrome.tabs.sendMessage(activeTab.id, 'config');
+                setupInterface();
+            });
+        } else if(storedConfig.token){
             console.log(storedConfig);
             config = storedConfig.config;
             drawControls(config);

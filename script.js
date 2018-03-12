@@ -112,6 +112,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             tokenInited = true;
             window.location.reload();
             break;
+        case 'config':
+            config = defaultConfig;
+            chrome.storage.sync.set({'config': defaultConfig});
+            break;
     }
 });
 
