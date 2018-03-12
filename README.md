@@ -36,5 +36,5 @@ A chrome extension that extends your Google search results with customizable inf
 
 ### Misc:
 - [Licensed under the GPLv3](LICENSE.md)
-- For bug reports, feature requests, suggestions and contribution questions please open an issues
+- For bug reports, feature requests, suggestions and contribution questions please open an issue
 - You can also contact me via email: [balazs.saros@gmail.com](mailto:balazs.saros@gmail.com)
