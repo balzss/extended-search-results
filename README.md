@@ -23,10 +23,12 @@ A chrome extension that extends your Google search results with customizable inf
 
 ### How to get started:
 - Install the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/extended-search-results/ileojhhpfbcpegbcejekooedcgagggoo)
+- Go to [google.com](https://google.com)
+- Click on the extension icon
 - Provide a Presonal Access Token like so:
 ![token gif](token.gif)
-- Customizable the displayed info by clicking on the extension icon
-- Check the result by searching for a Github repo on Google
+- Customize the displayed info
+- Check the results by searching for a Github repo
 
 ### TODO/Roadmap:
 - Add config file where users can provide their own CSS
