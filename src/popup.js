@@ -85,7 +85,7 @@ let defaultConfig = [
 
 function apply () {
     let optionElem = document.getElementById('options').children;
-    let newConfig = Array();
+    let newConfig = [];
     for (const e of optionElem) {
         if (!e.querySelector('.name')) continue;
         let newConfigElem = {};
@@ -115,72 +115,84 @@ function resetDefault () {
     });
 }
 
-function drawControls (config) {
-    let container = document.createElement('div');
-    container.setAttribute('id', 'options');
-    container.setAttribute('class', 'container');
-    for (i of config) {
-        container.appendChild(createOptionElem(i.id, i.text, i.visible, i.postUrl));
-    }
-
-    all.appendChild(container);
-
-    let buttons = document.createElement('div');
-    buttons.setAttribute('class', 'btn-container');
-    let applyBtn = document.createElement('button');
-    applyBtn.textContent = 'apply';
-    applyBtn.addEventListener('click', apply);
-    let resetBtn = document.createElement('button');
-    resetBtn.textContent = 'reset to default';
-    resetBtn.addEventListener('click', resetDefault);
-    let removeLink = document.createElement('button');
-    removeLink.textContent = 'Remove stored access token';
-    removeLink.addEventListener('click', () => {
-        chrome.storage.sync.remove('token');
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            let activeTab = tabs[0];
-            chrome.tabs.sendMessage(activeTab.id, 'removeToken');
-        });
-        setupInterface();
+function removeAccessToken () {
+    chrome.storage.sync.remove('token');
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+        let activeTab = tabs[0];
+        chrome.tabs.sendMessage(activeTab.id, 'removeToken');
     });
-
-    buttons.appendChild(applyBtn);
-    buttons.appendChild(resetBtn);
-    buttons.appendChild(removeLink);
-
-    all.appendChild(buttons);
+    setupInterface();
 }
 
-function createOptionElem (name, text, visible, postUrl) {
+function drawControls (config) {
+    let container = createElemWithClass('div', 'container');
+    container.setAttribute('id', 'options');
+
+    let optionElems = config.map(option => createOptionElem(option));
+    all.appendChild(appendAll(optionElems, container));
+
+    all.appendChild(createButtons());
+}
+
+function createButtons () {
+    const buttonElems = [
+        createButton('apply', apply),
+        createButton('reset to default', resetDefault),
+        createButton('Remove stored access token', removeAccessToken)
+    ];
+    return appendAll(buttonElems, createElemWithClass('div', 'btn-container'));
+}
+
+function createButton (text, clickListener) {
+    let button = document.createElement('button');
+    button.textContent = text;
+    button.addEventListener('click', clickListener);
+    return button;
+}
+
+function createElemWithClass (tag, _class) {
+    let elem = document.createElement(tag);
+    elem.setAttribute('class', _class);
+    return elem;
+}
+
+function appendAll (elements, target) {
+    for (let element of elements) {
+        target.appendChild(element);
+    }
+    return target;
+}
+
+function createOptionElem (option) {
     let wrapperElem = document.createElement('div');
     wrapperElem.setAttribute('class', 'option-group');
     wrapperElem.setAttribute('draggable', 'true');
     addDnDHandlers(wrapperElem);
-    if (postUrl) wrapperElem.dataset.postUrl = postUrl;
+    if (option.postUrl) wrapperElem.dataset.postUrl = option.postUrl;
 
     let nameElem = document.createElement('span');
     nameElem.setAttribute('class', 'name');
-    nameElem.textContent = name;
+    nameElem.textContent = option.id;
     wrapperElem.appendChild(nameElem);
 
     let textElem = document.createElement('input');
     textElem.setAttribute('class', 'text');
     textElem.setAttribute('type', 'text');
-    textElem.setAttribute('value', text);
+    textElem.setAttribute('value', option.text);
     wrapperElem.appendChild(textElem);
 
     let labelElem = document.createElement('label');
     labelElem.setAttribute('class', 'switch');
-    labelElem.setAttribute('for', name);
+    labelElem.setAttribute('for', option.id);
 
     let checkboxElem = document.createElement('div');
     checkboxElem.setAttribute('class', 'slider');
 
     let inputElem = document.createElement('input');
     inputElem.setAttribute('type', 'checkbox');
-    inputElem.setAttribute('id', name);
+    inputElem.setAttribute('id', option.id);
 
-    if (visible) inputElem.setAttribute('checked', 'checked');
+    if (option.visible) inputElem.setAttribute('checked', 'checked');
     labelElem.appendChild(inputElem);
     labelElem.appendChild(checkboxElem);
     wrapperElem.appendChild(labelElem);
@@ -196,7 +208,7 @@ function setupInterface () {
             setupInterface();
         } else if (storedConfig.token) {
             console.log(storedConfig);
-            config = storedConfig.config;
+            let config = storedConfig.config;
             drawControls(config);
         } else {
             let token = document.createElement('div');
@@ -232,8 +244,7 @@ function testToken () {
 
     fetch('https://api.github.com/graphql', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: '{ rateLimit { limit } }'}),
+        body: JSON.stringify({query: '{ rateLimit { limit } }'}),
         headers: new Headers({
             'Content-Type': 'application/json',
             'Authorization': 'bearer ' + token
@@ -295,7 +306,7 @@ function handleDrop (e) {
     }
 
     // Don't do anything if dropping the same column we're dragging.
-    if (dragSrcEl != this) {
+    if (dragSrcEl !== this) {
         // Set the source column's HTML to the HTML of the column we dropped on.
         // Alert(this.outerHTML);
         // DragSrcEl.innerHTML = this.innerHTML;
