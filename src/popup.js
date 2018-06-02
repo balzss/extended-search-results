@@ -1,6 +1,6 @@
 let all = document.getElementById('all');
-let defaultConfig = [ 
-    { 
+let defaultConfig = [
+    {
         id: 'starCount',
         visible: true,
         text: 'Stars:'
@@ -80,18 +80,18 @@ let defaultConfig = [
         visible: false,
         text: 'All PRs:',
         postUrl: '/pulls?utf8=✓&q=is%3Apr'
-    },
+    }
 ];
 
-function apply() {
+function apply () {
     let optionElem = document.getElementById('options').children;
     let newConfig = Array();
-    for(const e of optionElem){
-        if(!e.querySelector('.name')) continue;
+    for (const e of optionElem) {
+        if (!e.querySelector('.name')) continue;
         let newConfigElem = {};
         newConfigElem.id = e.querySelector('.name').textContent;
         console.log(e.querySelector('.name'));
-        if(e.dataset.postUrl) newConfigElem.postUrl = e.dataset.postUrl;
+        if (e.dataset.postUrl) newConfigElem.postUrl = e.dataset.postUrl;
         newConfigElem.visible = e.querySelector('#' + newConfigElem.id).checked;
         newConfigElem.text = e.querySelector('.text').value;
 
@@ -99,28 +99,27 @@ function apply() {
     }
 
     chrome.storage.sync.set({'config': newConfig}, () => {
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-            var activeTab = tabs[0];
+        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+            let activeTab = tabs[0];
             chrome.tabs.sendMessage(activeTab.id, 'apply');
             window.close();
         });
     });
-
 }
 
-function resetDefault(){
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-        var activeTab = tabs[0];
+function resetDefault () {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+        let activeTab = tabs[0];
         chrome.tabs.sendMessage(activeTab.id, 'reset');
         window.close();
     });
 }
 
-function drawControls(config){
+function drawControls (config) {
     let container = document.createElement('div');
     container.setAttribute('id', 'options');
     container.setAttribute('class', 'container');
-    for(i of config){
+    for (i of config) {
         container.appendChild(createOptionElem(i.id, i.text, i.visible, i.postUrl));
     }
 
@@ -132,14 +131,14 @@ function drawControls(config){
     applyBtn.textContent = 'apply';
     applyBtn.addEventListener('click', apply);
     let resetBtn = document.createElement('button');
-    resetBtn.textContent = 'reset to default'
+    resetBtn.textContent = 'reset to default';
     resetBtn.addEventListener('click', resetDefault);
     let removeLink = document.createElement('button');
     removeLink.textContent = 'Remove stored access token';
     removeLink.addEventListener('click', () => {
-        chrome.storage.sync.remove('token'); 
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-            var activeTab = tabs[0];
+        chrome.storage.sync.remove('token');
+        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+            let activeTab = tabs[0];
             chrome.tabs.sendMessage(activeTab.id, 'removeToken');
         });
         setupInterface();
@@ -152,12 +151,12 @@ function drawControls(config){
     all.appendChild(buttons);
 }
 
-function createOptionElem(name, text, visible, postUrl){
+function createOptionElem (name, text, visible, postUrl) {
     let wrapperElem = document.createElement('div');
     wrapperElem.setAttribute('class', 'option-group');
     wrapperElem.setAttribute('draggable', 'true');
     addDnDHandlers(wrapperElem);
-    if(postUrl) wrapperElem.dataset.postUrl = postUrl;
+    if (postUrl) wrapperElem.dataset.postUrl = postUrl;
 
     let nameElem = document.createElement('span');
     nameElem.setAttribute('class', 'name');
@@ -181,7 +180,7 @@ function createOptionElem(name, text, visible, postUrl){
     inputElem.setAttribute('type', 'checkbox');
     inputElem.setAttribute('id', name);
 
-    if(visible) inputElem.setAttribute('checked', 'checked');
+    if (visible) inputElem.setAttribute('checked', 'checked');
     labelElem.appendChild(inputElem);
     labelElem.appendChild(checkboxElem);
     wrapperElem.appendChild(labelElem);
@@ -189,13 +188,13 @@ function createOptionElem(name, text, visible, postUrl){
     return wrapperElem;
 }
 
-function setupInterface() {
+function setupInterface () {
     all.innerHTML = '';
-    chrome.storage.sync.get(['config', 'token'], (storedConfig) => {
-        if(!storedConfig.config) {
+    chrome.storage.sync.get(['config', 'token'], storedConfig => {
+        if (!storedConfig.config) {
             chrome.storage.sync.set({'config': defaultConfig});
             setupInterface();
-        } else if(storedConfig.token){
+        } else if (storedConfig.token) {
             console.log(storedConfig);
             config = storedConfig.config;
             drawControls(config);
@@ -214,7 +213,7 @@ function setupInterface() {
                     <li>Copy and paste the token below:</li>
                 </ul>
                 <input type="text" name="token" id="token-input" placeholder="Paste token here..."/>
-                <div id="error"></div>`
+                <div id="error"></div>`;
 
             let tokenBtn = document.createElement('button');
             tokenBtn.setAttribute('id', 'token-done');
@@ -222,12 +221,12 @@ function setupInterface() {
             tokenBtn.textContent = 'done';
             token.appendChild(tokenBtn);
             all.appendChild(token);
-            document.getElementById('token-link').addEventListener('click', () => {chrome.tabs.create({url: 'https://github.com/settings/tokens'}); return false;});
+            document.getElementById('token-link').addEventListener('click', () => { chrome.tabs.create({url: 'https://github.com/settings/tokens'}); return false; });
         }
     });
 }
 
-function testToken(){
+function testToken () {
     let token = document.querySelector('#token-input').value;
     document.getElementById('error').textContent = '';
 
@@ -240,11 +239,11 @@ function testToken(){
             'Authorization': 'bearer ' + token
         })
     }).then(response => response.json()).then(result => {
-        if(result.data) {
+        if (result.data) {
             console.log('success');
             chrome.storage.sync.set({'token': token}, () => {
-                chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-                    var activeTab = tabs[0];
+                chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+                    let activeTab = tabs[0];
                     chrome.tabs.sendMessage(activeTab.id, 'addToken');
                 });
                 setupInterface();
@@ -260,7 +259,7 @@ setupInterface();
 
 let dragSrcEl = null;
 
-function handleDragStart(e) {
+function handleDragStart (e) {
     // Target (this) element is the source node.
     dragSrcEl = this;
 
@@ -269,27 +268,27 @@ function handleDragStart(e) {
 
     this.classList.add('dragElem');
 }
-function handleDragOver(e) {
+function handleDragOver (e) {
     if (e.preventDefault) {
         e.preventDefault(); // Necessary. Allows us to drop.
     }
     this.classList.add('over');
 
-    e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+    e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object.
 
     return false;
 }
 
-function handleDragEnter(e) {
-    // this / e.target is the current hover target.
+function handleDragEnter (e) {
+    // This / e.target is the current hover target.
 }
 
-function handleDragLeave(e) {
-    this.classList.remove('over');  // this / e.target is previous target element.
+function handleDragLeave (e) {
+    this.classList.remove('over'); // This / e.target is previous target element.
 }
 
-function handleDrop(e) {
-    // this/e.target is current target element.
+function handleDrop (e) {
+    // This/e.target is current target element.
 
     if (e.stopPropagation) {
         e.stopPropagation(); // Stops some browsers from redirecting.
@@ -298,27 +297,26 @@ function handleDrop(e) {
     // Don't do anything if dropping the same column we're dragging.
     if (dragSrcEl != this) {
         // Set the source column's HTML to the HTML of the column we dropped on.
-        //alert(this.outerHTML);
-        //dragSrcEl.innerHTML = this.innerHTML;
-        //this.innerHTML = e.dataTransfer.getData('text/html');
+        // Alert(this.outerHTML);
+        // DragSrcEl.innerHTML = this.innerHTML;
+        // This.innerHTML = e.dataTransfer.getData('text/html');
         this.parentNode.removeChild(dragSrcEl);
         let dropHTML = e.dataTransfer.getData('text/html');
-        this.insertAdjacentHTML('beforebegin',dropHTML);
+        this.insertAdjacentHTML('beforebegin', dropHTML);
         let dropElem = this.previousSibling;
         addDnDHandlers(dropElem);
-
     }
     this.classList.remove('over');
     return false;
 }
 
-function handleDragEnd(e) {
+function handleDragEnd (e) {
     this.classList.remove('over');
 }
 
-function addDnDHandlers(elem) {
+function addDnDHandlers (elem) {
     elem.addEventListener('dragstart', handleDragStart, false);
-    elem.addEventListener('dragenter', handleDragEnter, false)
+    elem.addEventListener('dragenter', handleDragEnter, false);
     elem.addEventListener('dragover', handleDragOver, false);
     elem.addEventListener('dragleave', handleDragLeave, false);
     elem.addEventListener('drop', handleDrop, false);

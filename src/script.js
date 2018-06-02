@@ -1,6 +1,6 @@
 let delimeter = '•';
-let defaultConfig = [ 
-    { 
+let defaultConfig = [
+    {
         id: 'starCount',
         visible: true,
         text: 'Stars:'
@@ -134,49 +134,49 @@ function requestConfig(owner, repo) {
 function githubQuery(owner, repo) {
 return `{
     repository(owner: "${owner}", name: "${repo}") {
-        stars: stargazers { 
+        stars: stargazers {
             totalCount
         }
         openIssues: issues(states:[OPEN]) {
-            totalCount 
+            totalCount
         }
-        allIssues: issues { 
-            totalCount 
-        } 
-        closedIssues: issues(states: [CLOSED]) { 
-            totalCount 
+        allIssues: issues {
+            totalCount
         }
-        ref(qualifiedName: "master"){ 
-            target{ 
-                ... on Commit{ 
-                    commitCount: history { 
-                        totalCount 
-                    } 
-                    latestCommit: authoredDate 
-                } 
-            } 
-        } 
+        closedIssues: issues(states: [CLOSED]) {
+            totalCount
+        }
+        ref(qualifiedName: "master"){
+            target{
+                ... on Commit{
+                    commitCount: history {
+                        totalCount
+                    }
+                    latestCommit: authoredDate
+                }
+            }
+        }
         forkCount
-        watchers { 
-            totalCount 
-        } 
-        releases { 
-            totalCount 
-        } 
-        license 
-        primaryLanguage { 
-            name 
+        watchers {
+            totalCount
         }
-        openPullRequests: pullRequests(states: [OPEN]) { 
-            totalCount 
-        } 
-        closedPullRequests: pullRequests(states: [CLOSED]) { 
-            totalCount 
-        } 
-        allPullRequests: pullRequests { 
-            totalCount 
-        } 
-    } 
+        releases {
+            totalCount
+        }
+        license
+        primaryLanguage {
+            name
+        }
+        openPullRequests: pullRequests(states: [OPEN]) {
+            totalCount
+        }
+        closedPullRequests: pullRequests(states: [CLOSED]) {
+            totalCount
+        }
+        allPullRequests: pullRequests {
+            totalCount
+        }
+    }
 }`;
 }
 
@@ -234,11 +234,11 @@ function getGithubInfo(elem, owner, repo){
             }
             infos.license = r.license ? r.license : 'n/a';
             infos.primaryLanguage = r.primaryLanguage ? r.primaryLanguage.name : 'n/a';
-            updateGithuInfo(elem, infos);
+            updateGithubInfo(elem, infos);
     });
 }
 
-function updateGithuInfo(elem, info){
+function updateGithubInfo(elem, info){
     let inner = '<div style="opacity: 0.6; line-height: 1.6rem"><hr style="margin: 6px 0;">';
     for(i of config){
         if(i.visible){
