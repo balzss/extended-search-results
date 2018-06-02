@@ -1,0 +1,153 @@
+html, body {
+  font-family: 'Roboto Mono', sans-serif;
+  width: 450px;
+  height: 800px;
+  background-color: #333;
+  color: #f5f5f5;
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+.hl {
+  background-color: #607D8B;
+  padding: 3px 6px;
+  border-radius: 2px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.option-group:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.option-group {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 14px;
+  padding: 6px 16px;
+  transition: all 0.15s ease-in-out;
+  border-top: 2px dashed transparent;
+}
+
+.option-group > .name {
+  width: 45%;
+  cursor: move;
+}
+
+.option-group > .text {
+  width: 45%;
+  border: 1px solid #f5f5f5;
+  padding: 4px 8px;
+  background-color: transparent;
+  color: #f5f5f5;
+  font-family: 'Roboto Mono', sans-serif;
+}
+
+.switch {
+  display: inline-block;
+  height: 20px;
+  position: relative;
+  width: 40px;
+  margin-left: 8px;
+}
+
+.switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #777;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: all .2s ease-in-out;
+  border-radius: 20px;
+  opacity: 0.7;
+}
+
+.slider:before {
+  background-color: #f5f5f5;
+  top: 3px;
+  content: "";
+  height: 14px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 14px;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #607D8B;
+  opacity: 1;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 50%;
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  margin-top: 18px;
+  font-family: 'Roboto Mono', sans-serif;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.over {
+  border-top: 2px dashed #777;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#token {
+  color: #f5f5f5;
+  line-height: 28px;
+}
+
+#token-input {
+  width: 80%;
+  background-color: transparent;
+  border: 1px solid #f5f5f5;
+  padding: 4px;
+  font-size: 14px;
+  color: #f5f5f5;
+}
+
+#token h2{
+  margin-bottom: 0;
+}
+
+.link {
+  color: #90A4AE;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 6px;
+}
+
+#error {
+  color: #EF9A9A;
+}
