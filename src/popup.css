@@ -1,16 +1,16 @@
 html, body {
-  font-family: 'Roboto Mono', sans-serif;
   width: 450px;
   height: 800px;
-  background-color: #333;
-  color: #f5f5f5;
   margin: 0;
   margin-bottom: 16px;
+  font-family: "Roboto Mono", sans-serif;
+  color: #f5f5f5;
+  background-color: #333;
 }
 
 .hl {
-  background-color: #607D8B;
   padding: 3px 6px;
+  background-color: #607d8b;
   border-radius: 2px;
 }
 
@@ -20,18 +20,18 @@ html, body {
   align-items: center;
 }
 .option-group:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(255, 255, 255, .06);
 }
 .option-group {
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
-  font-size: 14px;
   padding: 6px 16px;
-  transition: all 0.15s ease-in-out;
+  font-size: 14px;
   border-top: 2px dashed transparent;
+  transition: all .15s ease-in-out;
 }
 
 .option-group > .name {
@@ -41,18 +41,18 @@ html, body {
 
 .option-group > .text {
   width: 45%;
-  border: 1px solid #f5f5f5;
   padding: 4px 8px;
-  background-color: transparent;
+  font-family: "Roboto Mono", sans-serif;
   color: #f5f5f5;
-  font-family: 'Roboto Mono', sans-serif;
+  background-color: transparent;
+  border: 1px solid #f5f5f5;
 }
 
 .switch {
-  display: inline-block;
-  height: 20px;
   position: relative;
+  display: inline-block;
   width: 40px;
+  height: 20px;
   margin-left: 8px;
 }
 
@@ -61,32 +61,32 @@ html, body {
 }
 
 .slider {
-  background-color: #777;
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
   position: absolute;
-  right: 0;
   top: 0;
-  transition: all .2s ease-in-out;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+  background-color: #777;
   border-radius: 20px;
-  opacity: 0.7;
+  opacity: .7;
+  transition: all .2s ease-in-out;
 }
 
 .slider:before {
-  background-color: #f5f5f5;
-  top: 3px;
-  content: "";
-  height: 14px;
-  left: 4px;
   position: absolute;
-  transition: .4s;
+  top: 3px;
+  left: 4px;
   width: 14px;
+  height: 14px;
+  content: "";
+  background-color: #f5f5f5;
   border-radius: 50%;
+  transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #607D8B;
+  background-color: #607d8b;
   opacity: 1;
 }
 
@@ -95,22 +95,22 @@ input:checked + .slider:before {
 }
 
 button:hover {
+  box-shadow: 0 19px 38px rgba(0,0,0,.3), 0 15px 12px rgba(0,0,0,.22);
   transform: scale(1.05);
-  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
 
 button {
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
   width: 50%;
-  background-color: #f5f5f5;
-  color: #333;
-  border: none;
-  border-radius: 3px;
   padding: 6px 12px;
   margin-top: 18px;
-  font-family: 'Roboto Mono', sans-serif;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  font-family: "Roboto Mono", sans-serif;
+  color: #333;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.19), 0 6px 6px rgba(0,0,0,.23);
+  transition: all .2s ease-in-out;
 }
 
 .over {
@@ -124,17 +124,17 @@ button {
 }
 
 #token {
-  color: #f5f5f5;
   line-height: 28px;
+  color: #f5f5f5;
 }
 
 #token-input {
   width: 80%;
-  background-color: transparent;
-  border: 1px solid #f5f5f5;
   padding: 4px;
   font-size: 14px;
   color: #f5f5f5;
+  background-color: transparent;
+  border: 1px solid #f5f5f5;
 }
 
 #token h2{
@@ -142,12 +142,12 @@ button {
 }
 
 .link {
-  color: #90A4AE;
-  cursor: pointer;
-  text-decoration: underline;
   padding: 6px;
+  color: #90a4ae;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 #error {
-  color: #EF9A9A;
+  color: #ef9a9a;
 }
