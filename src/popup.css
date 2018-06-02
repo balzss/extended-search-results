@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   width: 450px;
   height: 800px;
   margin: 0;
@@ -19,9 +20,11 @@ html, body {
   flex-direction: column;
   align-items: center;
 }
+
 .option-group:nth-child(odd) {
   background-color: rgba(255, 255, 255, .06);
 }
+
 .option-group {
   box-sizing: border-box;
   display: flex;
@@ -57,7 +60,7 @@ html, body {
 }
 
 .switch input {
-  display:none;
+  display: none;
 }
 
 .slider {
@@ -90,7 +93,7 @@ input:checked + .slider {
   opacity: 1;
 }
 
-input:checked + .slider:before {
+input:checked + .slider::before {
   transform: translateX(16px);
 }
 
