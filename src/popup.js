@@ -67,6 +67,61 @@ function createButton (text, clickListener) {
     return button;
 }
 
+function createOptionElem (option) {
+    let labelElem = createLabelElem(option.id);
+
+    appendAll([
+        createCheckboxElem(option.id, option.visible),
+        createElemWithClass('div', 'slider')
+    ], labelElem);
+
+    let optionGroupElem = createOptionGroup(option.postUrl);
+
+    appendAll([
+        createNameElem(option.id),
+        createTextElem(option.text),
+        labelElem
+    ], optionGroupElem);
+
+    return optionGroupElem;
+}
+
+function createOptionGroup (postUrl) {
+    let optionGroupElem = createElemWithClass('div', 'option-group');
+    optionGroupElem.setAttribute('draggable', 'true');
+    addDnDHandlers(optionGroupElem);
+    if (postUrl) optionGroupElem.dataset.postUrl = postUrl;
+    return optionGroupElem;
+}
+
+function createNameElem (content) {
+    let nameElem = createElemWithClass('span', 'name');
+    nameElem.textContent = content;
+    return nameElem;
+}
+
+function createTextElem (text) {
+    let textElem = createElemWithClass('input', 'text');
+    textElem.setAttribute('type', 'text');
+    textElem.setAttribute('value', text);
+    return textElem;
+}
+
+function createLabelElem (_id) {
+    let labelElem = createElemWithClass('label', 'switch');
+    labelElem.setAttribute('for', _id);
+    return labelElem;
+}
+
+function createCheckboxElem (_id, visible) {
+    let checkboxElem = createElemWithClass('input', 'checkbox');
+    checkboxElem.setAttribute('id', _id);
+    if (visible) {
+        checkboxElem.setAttribute('checked', 'checked');
+    }
+    return checkboxElem;
+}
+
 function createElemWithClass (tag, _class) {
     let elem = document.createElement(tag);
     elem.setAttribute('class', _class);
@@ -78,43 +133,6 @@ function appendAll (elements, target) {
         target.appendChild(element);
     }
     return target;
-}
-
-function createOptionElem (option) {
-    let wrapperElem = document.createElement('div');
-    wrapperElem.setAttribute('class', 'option-group');
-    wrapperElem.setAttribute('draggable', 'true');
-    addDnDHandlers(wrapperElem);
-    if (option.postUrl) wrapperElem.dataset.postUrl = option.postUrl;
-
-    let nameElem = document.createElement('span');
-    nameElem.setAttribute('class', 'name');
-    nameElem.textContent = option.id;
-    wrapperElem.appendChild(nameElem);
-
-    let textElem = document.createElement('input');
-    textElem.setAttribute('class', 'text');
-    textElem.setAttribute('type', 'text');
-    textElem.setAttribute('value', option.text);
-    wrapperElem.appendChild(textElem);
-
-    let labelElem = document.createElement('label');
-    labelElem.setAttribute('class', 'switch');
-    labelElem.setAttribute('for', option.id);
-
-    let checkboxElem = document.createElement('div');
-    checkboxElem.setAttribute('class', 'slider');
-
-    let inputElem = document.createElement('input');
-    inputElem.setAttribute('type', 'checkbox');
-    inputElem.setAttribute('id', option.id);
-
-    if (option.visible) inputElem.setAttribute('checked', 'checked');
-    labelElem.appendChild(inputElem);
-    labelElem.appendChild(checkboxElem);
-    wrapperElem.appendChild(labelElem);
-
-    return wrapperElem;
 }
 
 function setupInterface () {
@@ -150,7 +168,11 @@ function setupInterface () {
             tokenBtn.textContent = 'done';
             token.appendChild(tokenBtn);
             all.appendChild(token);
-            document.getElementById('token-link').addEventListener('click', () => { chrome.tabs.create({url: 'https://github.com/settings/tokens'}); return false; });
+            document.getElementById('token-link')
+                .addEventListener('click', () => {
+                    chrome.tabs.create({url: 'https://github.com/settings/tokens'});
+                    return false;
+                });
         }
     });
 }
