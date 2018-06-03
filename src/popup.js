@@ -1,44 +1,49 @@
 let all = document.getElementById('all');
 
 function apply () {
-    let optionElem = document.getElementById('options').children;
     let newConfig = [];
+    let optionElem = document.getElementById('options').children;
     for (const e of optionElem) {
-        if (!e.querySelector('.name')) continue;
-        let newConfigElem = {};
-        newConfigElem.id = e.querySelector('.name').textContent;
-        console.log(e.querySelector('.name'));
-        if (e.dataset.postUrl) newConfigElem.postUrl = e.dataset.postUrl;
-        newConfigElem.visible = e.querySelector('#' + newConfigElem.id).checked;
-        newConfigElem.text = e.querySelector('.text').value;
-
-        newConfig.push(newConfigElem);
+        if (!e.querySelector('.name')) {
+            continue;
+        }
+        newConfig.push(createConfigElem(e));
     }
 
     chrome.storage.sync.set({'config': newConfig}, () => {
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            let activeTab = tabs[0];
-            chrome.tabs.sendMessage(activeTab.id, 'apply');
-            window.close();
-        });
+        sendMsgToActiveTab('apply', window.close);
     });
 }
 
+function createConfigElem (e) {
+    const id = e.querySelector('.name').textContent;
+    return {
+        id: id,
+        text: e.querySelector('.text').value,
+        postUrl: e.dataset.postUrl | '',
+        visible: e.querySelector('#' + id).checked
+    };
+}
+
 function resetDefault () {
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-        let activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, 'reset');
-        window.close();
-    });
+    sendMsgToActiveTab('reset', window.close);
 }
 
 function removeAccessToken () {
     chrome.storage.sync.remove('token');
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-        let activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, 'removeToken');
-    });
+    sendMsgToActiveTab('removeToken');
     setupInterface();
+}
+
+function sendMsgToActiveTab (message, cb = () => {}) {
+    chrome.tabs.query({currentWindow: true, active: true}, tabs => {
+        chrome.tabs.sendMessage(getActiveTab(tabs).id, message);
+        cb();
+    });
+}
+
+function getActiveTab (tabs) {
+    return tabs[0];
 }
 
 function drawControls (config) {
