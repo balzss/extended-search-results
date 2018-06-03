@@ -38,8 +38,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function requestConfig (owner, repo) {
     return {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: githubQuery(owner, repo)}),
+        body: JSON.stringify({
+            query: githubQuery(owner, repo)
+        }),
         headers: new Headers({
             'Content-Type': 'application/json',
             'Authorization': 'bearer ' + token
@@ -101,19 +102,19 @@ function timeSince (date) {
     let timeBorders = [31536000, 2592000, 84400, 3600, 60, 1];
     let timeLabels = [' year', ' month', ' day', ' hour', ' minute', ' second'];
     for (const [index, value] of timeBorders.entries()) {
-        interval = Math.floor(seconds / value);
+        let interval = Math.floor(seconds / value);
         if (interval >= 1) {
-            return (interval == 1 ? 'a' : interval) + timeLabels[index] + (interval > 1 ? 's' : '') + ' ago';
+            return (interval === 1 ? 'a' : interval) + timeLabels[index] + (interval > 1 ? 's' : '') + ' ago';
         }
     }
 }
 
 function getUrl (elem) {
     let url = elem.querySelectorAll('h3.r > a')[0];
-    if (url == undefined) return;
+    if (url === undefined) return;
     url = url.href;
 
-    let regexp = '^http(s)?:\/\/github.com(\/[-a-zA-Z0-9@:%_\+.~#?&=]+){2}$';
+    let regexp = '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$';
     if (url.match(new RegExp(regexp))) {
         let splitUrl = url.split('/');
 
@@ -155,13 +156,16 @@ function getGithubInfo (elem, owner, repo) {
 
 function updateGithubInfo (elem, info) {
     let inner = '<div style="opacity: 0.6; line-height: 1.6rem"><hr style="margin: 6px 0;">';
-    for (i of config) {
+    for (let i of config) {
         if (i.visible) {
-            let displayedText = i.text == '' ? '' : i.text + ' ';
-            if (i.postUrl == undefined || info[i.id] == 'n/a') {
+            let displayedText = i.text === '' ? '' : i.text + ' ';
+            if (i.postUrl === undefined || info[i.id] === 'n/a') {
                 inner += `<span>${displayedText}${info[i.id]}</span> ${delimeter} `;
             } else {
-                inner += `<a style="text-decoration: underline; cursor: pointer" href="https://github.com/${info.url + i.postUrl}">${displayedText}${info[i.id]}</a> ${delimeter} `;
+                inner += `<a style="text-decoration: underline; cursor: pointer"
+                            href="https://github.com/${info.url + i.postUrl}">
+                                ${displayedText}${info[i.id]}
+                            </a> ${delimeter} `;
             }
         }
     }
@@ -173,7 +177,7 @@ function updateGithubInfo (elem, info) {
 }
 
 function run () {
-    let regexp = '^(http(s)?:\/\/)?(www\.)?google(\.[a-zA-Z]{2,8}){1,2}\/search\?';
+    let regexp = '^(http(s)?://)?(www.)?google(.[a-zA-Z]{2,8}){1,2}/search?';
     if (!window.location.href.match(new RegExp(regexp))) {
         console.log(window.location.href);
         return;
