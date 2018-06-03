@@ -1,5 +1,17 @@
 let all = document.getElementById('all');
 
+const noTokenTemplate = `
+    <h2>Setup presonal access token:</h2>
+    <ul>
+        <li>Go to the <span id="token-link" class="link">Personal access token</span> page</li>
+        <li>Click on the <span class="hl">Generate new token</span> button</li>
+        <li>Give any name you like to your token</li>
+        <li>Click <span class="hl">Generate token</span> on the bottom of the page</li>
+        <li>Copy and paste the token below:</li>
+    </ul>
+    <input type="text" name="token" id="token-input" placeholder="Paste token here..."/>
+    <div id="error"></div>`;
+
 function apply () {
     let newConfig = [];
     let optionElem = document.getElementById('options').children;
@@ -128,12 +140,6 @@ function createCheckboxElem (_id, visible) {
     return checkboxElem;
 }
 
-function createElemWithClass (tag, _class) {
-    let elem = document.createElement(tag);
-    elem.setAttribute('class', _class);
-    return elem;
-}
-
 function appendAll (elements, target) {
     for (let element of elements) {
         target.appendChild(element);
@@ -148,39 +154,43 @@ function setupInterface () {
             chrome.storage.sync.set({'config': defaultConfig});
             setupInterface();
         } else if (storedConfig.token) {
-            console.log(storedConfig);
-            let config = storedConfig.config;
-            drawControls(config);
+            drawControls(storedConfig.config);
         } else {
-            let token = document.createElement('div');
-            token.setAttribute('id', 'token');
-            token.setAttribute('class', 'container');
-
-            token.innerHTML = `
-                <h2>Setup presonal access token:</h2>
-                <ul>
-                    <li>Go to the <span id="token-link" class="link">Personal access token</span> page</li>
-                    <li>Click on the <span class="hl">Generate new token</span> button</li>
-                    <li>Give any name you like to your token</li>
-                    <li>Click <span class="hl">Generate token</span> on the bottom of the page</li>
-                    <li>Copy and paste the token below:</li>
-                </ul>
-                <input type="text" name="token" id="token-input" placeholder="Paste token here..."/>
-                <div id="error"></div>`;
-
-            let tokenBtn = document.createElement('button');
-            tokenBtn.setAttribute('id', 'token-done');
-            tokenBtn.addEventListener('click', testToken);
-            tokenBtn.textContent = 'done';
-            token.appendChild(tokenBtn);
+            let token = createNoTokenElem();
             all.appendChild(token);
-            document.getElementById('token-link')
-                .addEventListener('click', () => {
-                    chrome.tabs.create({url: 'https://github.com/settings/tokens'});
-                    return false;
-                });
+            makeTokenLinkClickable();
         }
     });
+}
+
+function createNoTokenElem () {
+    let token = createElemWithClass('div', 'container');
+    token.setAttribute('id', 'token');
+    token.innerHTML = noTokenTemplate;
+    token.appendChild(createSaveTokenBtn());
+    return token;
+}
+
+function makeTokenLinkClickable () {
+    document.getElementById('token-link')
+        .addEventListener('click', () => {
+            chrome.tabs.create({url: 'https://github.com/settings/tokens'});
+            return false;
+        });
+}
+
+function createSaveTokenBtn () {
+    let tokenBtn = document.createElement('button');
+    tokenBtn.setAttribute('id', 'token-done');
+    tokenBtn.addEventListener('click', testToken);
+    tokenBtn.textContent = 'done';
+    return tokenBtn;
+}
+
+function createElemWithClass (tag, _class) {
+    let elem = document.createElement(tag);
+    elem.setAttribute('class', _class);
+    return elem;
 }
 
 function testToken () {
