@@ -166,23 +166,19 @@ function updateGithubInfo (outerElem, info) {
     infoElem.appendChild(divideLine);
 
     for (const i of config.filter(prop => prop.visible)) {
-        // const displayedText = i.text === '' ? '' : i.text + 'x';
         const appendType = i.postUrl === undefined || info[i.id] === 'n/a' ? 'span' : 'a';
         let appendNode = document.createElement(appendType);
+
+        if (appendType === 'a') {
+            appendNode.style.textDecoration = 'underline';
+            appendNode.style.cursor = 'pointer';
+            appendNode.href = `https://github.com/${info.url + i.postUrl}`;
+        }
         appendNode.textContent = [i.text, info[i.id]].join(' ');
         infoElem.appendChild(appendNode);
         infoElem.appendChild(document.createTextNode(delimeter));
-
-        // if (i.postUrl === undefined || info[i.id] === 'n/a') {
-        //     inner += `<span>${displayedText}${info[i.id]}</span> ${delimeter} `;
-        // } else {
-        //     inner += `<a style="text-decoration: underline; cursor: pointer"
-        //                     href="https://github.com/${info.url + i.postUrl}">
-        //                         ${displayedText}${info[i.id]}
-        //                     </a> ${delimeter} `;
-        // }
     }
-
+    infoElem.removeChild(infoElem.lastChild);
     outerElem.appendChild(infoElem);
 }
 
