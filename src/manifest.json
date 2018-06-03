@@ -1,7 +1,7 @@
 {
     "name":"Extended Search Results",
     "description":"Extend your Google search results with customizable information about Github repositories",
-    "version": "0.2",
+    "version": "0.3.0",
     "manifest_version": 2,
     "permissions": [
         "https://api.github.com/*",
