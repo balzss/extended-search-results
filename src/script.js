@@ -155,10 +155,7 @@ function getGithubInfo (elem, owner, repo) {
 }
 
 function updateGithubInfo (outerElem, info) {
-    // let inner = '<div style="opacity: 0.6; line-height: 1.6rem"><hr style="margin: 6px 0;">';
-
     let infoElem = document.createElement('div');
-    // infoElem.cssText = 'opacity: 0.6; line-height: 1.6rem';
     infoElem.style.opacity = '0.6';
     infoElem.style.lineHeight = '1.6rem';
     let divideLine = document.createElement('hr');
