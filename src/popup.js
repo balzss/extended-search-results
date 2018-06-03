@@ -115,6 +115,7 @@ function createLabelElem (_id) {
 
 function createCheckboxElem (_id, visible) {
     let checkboxElem = createElemWithClass('input', 'checkbox');
+    checkboxElem.setAttribute('type', 'checkbox');
     checkboxElem.setAttribute('id', _id);
     if (visible) {
         checkboxElem.setAttribute('checked', 'checked');
