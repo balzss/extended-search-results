@@ -1,4 +1,4 @@
-let delimeter = '•';
+const delimeter = ' • ';
 let config;
 let token;
 let tokenInited = false;
@@ -154,26 +154,36 @@ function getGithubInfo (elem, owner, repo) {
         });
 }
 
-function updateGithubInfo (elem, info) {
-    let inner = '<div style="opacity: 0.6; line-height: 1.6rem"><hr style="margin: 6px 0;">';
-    for (let i of config) {
-        if (i.visible) {
-            let displayedText = i.text === '' ? '' : i.text + ' ';
-            if (i.postUrl === undefined || info[i.id] === 'n/a') {
-                inner += `<span>${displayedText}${info[i.id]}</span> ${delimeter} `;
-            } else {
-                inner += `<a style="text-decoration: underline; cursor: pointer"
-                            href="https://github.com/${info.url + i.postUrl}">
-                                ${displayedText}${info[i.id]}
-                            </a> ${delimeter} `;
-            }
-        }
-    }
-    // Removing last delimeter
-    inner = inner.slice(0, -3);
-    inner += '</div>';
+function updateGithubInfo (outerElem, info) {
+    // let inner = '<div style="opacity: 0.6; line-height: 1.6rem"><hr style="margin: 6px 0;">';
 
-    elem.innerHTML += inner;
+    let infoElem = document.createElement('div');
+    // infoElem.cssText = 'opacity: 0.6; line-height: 1.6rem';
+    infoElem.style.opacity = '0.6';
+    infoElem.style.lineHeight = '1.6rem';
+    let divideLine = document.createElement('hr');
+    divideLine.style.margin = '6px 0';
+    infoElem.appendChild(divideLine);
+
+    for (const i of config.filter(prop => prop.visible)) {
+        // const displayedText = i.text === '' ? '' : i.text + 'x';
+        const appendType = i.postUrl === undefined || info[i.id] === 'n/a' ? 'span' : 'a';
+        let appendNode = document.createElement(appendType);
+        appendNode.textContent = [i.text, info[i.id]].join(' ');
+        infoElem.appendChild(appendNode);
+        infoElem.appendChild(document.createTextNode(delimeter));
+
+        // if (i.postUrl === undefined || info[i.id] === 'n/a') {
+        //     inner += `<span>${displayedText}${info[i.id]}</span> ${delimeter} `;
+        // } else {
+        //     inner += `<a style="text-decoration: underline; cursor: pointer"
+        //                     href="https://github.com/${info.url + i.postUrl}">
+        //                         ${displayedText}${info[i.id]}
+        //                     </a> ${delimeter} `;
+        // }
+    }
+
+    outerElem.appendChild(infoElem);
 }
 
 function run () {
