@@ -1,0 +1,156 @@
+html,
+body {
+  width: 450px;
+  height: 800px;
+  margin: 0;
+  margin-bottom: 16px;
+  font-family: "Roboto Mono", sans-serif;
+  color: #f5f5f5;
+  background-color: #333;
+}
+
+.hl {
+  padding: 3px 6px;
+  background-color: #607d8b;
+  border-radius: 2px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.option-group:nth-child(odd) {
+  background-color: rgba(255, 255, 255, .06);
+}
+
+.option-group {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 16px;
+  font-size: 14px;
+  border-top: 2px dashed transparent;
+  transition: all .15s ease-in-out;
+}
+
+.option-group > .name {
+  width: 45%;
+  cursor: move;
+}
+
+.option-group > .text {
+  width: 45%;
+  padding: 4px 8px;
+  font-family: "Roboto Mono", sans-serif;
+  color: #f5f5f5;
+  background-color: transparent;
+  border: 1px solid #f5f5f5;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+  background-color: #777;
+  border-radius: 20px;
+  opacity: .7;
+  transition: all .2s ease-in-out;
+}
+
+.slider:before {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 14px;
+  height: 14px;
+  content: "";
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #607d8b;
+  opacity: 1;
+}
+
+input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+button:hover {
+  box-shadow: 0 19px 38px rgba(0,0,0,.3), 0 15px 12px rgba(0,0,0,.22);
+  transform: scale(1.05);
+}
+
+button {
+  width: 50%;
+  padding: 6px 12px;
+  margin-top: 18px;
+  font-family: "Roboto Mono", sans-serif;
+  color: #333;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.19), 0 6px 6px rgba(0,0,0,.23);
+  transition: all .2s ease-in-out;
+}
+
+.over {
+  border-top: 2px dashed #777;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#token {
+  line-height: 28px;
+  color: #f5f5f5;
+}
+
+#token-input {
+  width: 80%;
+  padding: 4px;
+  font-size: 14px;
+  color: #f5f5f5;
+  background-color: transparent;
+  border: 1px solid #f5f5f5;
+}
+
+#token h2{
+  margin-bottom: 0;
+}
+
+.link {
+  padding: 6px;
+  color: #90a4ae;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#error {
+  color: #ef9a9a;
+}

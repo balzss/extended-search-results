@@ -1,0 +1,34 @@
+{
+  "name": "extended-search-results",
+  "version": "0.2.0",
+  "description": "Extend your Google search results with customizable information about Github repositories",
+  "main": "src/script.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balzss/extended-search-results.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "github",
+    "productivity"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/balzss/extended-search-results/issues"
+  },
+  "homepage": "https://github.com/balzss/extended-search-results#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.1",
+    "stylelint": "^9.2.1",
+    "stylelint-config-recommended-scss": "^3.2.0",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-order": "^0.8.1",
+    "stylelint-scss": "^3.1.0"
+  }
+}
