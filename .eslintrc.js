@@ -22,7 +22,7 @@ module.exports = {
       "error", {
         "min": 2,
         "max": 32,
-        "exceptions": ["i", "a", "n", "r", "g", "b", "e"]
+        "exceptions": ["i", "j", "k", "x", "y", "n", "e"]
       }
     ],
     "array-bracket-spacing": [
