@@ -13,14 +13,8 @@ const noTokenTemplate = `
     <div id="error"></div>`;
 
 function apply () {
-    let newConfig = [];
-    let optionElem = document.getElementById('options').children;
-    for (const e of optionElem) {
-        if (!e.querySelector('.name')) {
-            continue;
-        }
-        newConfig.push(createConfigElem(e));
-    }
+    const optionElems = document.querySelector('#options').children;
+    const newConfig = Array.from(optionElems).filter(e => e.querySelector('.name')).map(createConfigElem);
 
     chrome.storage.sync.set({'config': newConfig}, () => {
         reloadActiveTab();
@@ -56,10 +50,10 @@ function reloadActiveTab () {
 }
 
 function drawControls (config) {
-    let container = createElemWithClass('div', 'container');
+    const container = createElemWithClass('div', 'container');
     container.setAttribute('id', 'options');
 
-    let optionElems = config.map(option => createOptionElem(option));
+    const optionElems = config.map(option => createOptionElem(option));
     all.appendChild(appendAll(optionElems, container));
 
     all.appendChild(createButtons());
@@ -75,21 +69,21 @@ function createButtons () {
 }
 
 function createButton (text, clickListener) {
-    let button = document.createElement('button');
+    const button = document.createElement('button');
     button.textContent = text;
     button.addEventListener('click', clickListener);
     return button;
 }
 
 function createOptionElem (option) {
-    let labelElem = createLabelElem(option.id);
+    const labelElem = createLabelElem(option.id);
 
     appendAll([
         createCheckboxElem(option.id, option.visible),
         createElemWithClass('div', 'slider')
     ], labelElem);
 
-    let optionGroupElem = createOptionGroup(option.postUrl);
+    const optionGroupElem = createOptionGroup(option.postUrl);
 
     appendAll([
         createNameElem(option.id),
@@ -101,7 +95,7 @@ function createOptionElem (option) {
 }
 
 function createOptionGroup (postUrl) {
-    let optionGroupElem = createElemWithClass('div', 'option-group');
+    const optionGroupElem = createElemWithClass('div', 'option-group');
     optionGroupElem.setAttribute('draggable', 'true');
     addDnDHandlers(optionGroupElem);
     if (postUrl) optionGroupElem.dataset.postUrl = postUrl;
@@ -109,26 +103,26 @@ function createOptionGroup (postUrl) {
 }
 
 function createNameElem (content) {
-    let nameElem = createElemWithClass('span', 'name');
+    const nameElem = createElemWithClass('span', 'name');
     nameElem.textContent = content;
     return nameElem;
 }
 
 function createTextElem (text) {
-    let textElem = createElemWithClass('input', 'text');
+    const textElem = createElemWithClass('input', 'text');
     textElem.setAttribute('type', 'text');
     textElem.setAttribute('value', text);
     return textElem;
 }
 
 function createLabelElem (_id) {
-    let labelElem = createElemWithClass('label', 'switch');
+    const labelElem = createElemWithClass('label', 'switch');
     labelElem.setAttribute('for', _id);
     return labelElem;
 }
 
 function createCheckboxElem (_id, visible) {
-    let checkboxElem = createElemWithClass('input', 'checkbox');
+    const checkboxElem = createElemWithClass('input', 'checkbox');
     checkboxElem.setAttribute('type', 'checkbox');
     checkboxElem.setAttribute('id', _id);
     if (visible) {
@@ -138,7 +132,7 @@ function createCheckboxElem (_id, visible) {
 }
 
 function appendAll (elements, target) {
-    for (let element of elements) {
+    for (const element of elements) {
         target.appendChild(element);
     }
     return target;
@@ -153,7 +147,7 @@ function setupInterface () {
         } else if (storedConfig.token) {
             drawControls(storedConfig.config);
         } else {
-            let token = createNoTokenElem();
+            const token = createNoTokenElem();
             all.appendChild(token);
             makeTokenLinkClickable();
         }
