@@ -1,4 +1,8 @@
-const delimeter = ' • ';
+const DELIMETER = ' • ';
+const REGEX = {
+    GOOGLE: '^(http(s)?://)?(www.)?google(.[a-zA-Z]{2,8}){1,2}/search?',
+    GITHUB: '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$'
+};
 let config, token;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -101,14 +105,13 @@ function timeSince (date) {
     }
 }
 
-function getUrl (elem) {
+function parseUrl (elem) {
     const url = (elem.querySelector('h3.r > a') || {}).href;
     if (!url) return;
 
-    const regexp = '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$';
-    if (url.match(new RegExp(regexp))) {
-        let splitUrl = url.split('/');
-        getGithubInfo(elem, splitUrl[splitUrl.length - 2], splitUrl[splitUrl.length - 1]);
+    if (url.match(new RegExp(REGEX.GITHUB))) {
+        const [,,, owner, repo] = url.split('/');
+        getGithubInfo(elem, owner, repo);
     }
 }
 
@@ -156,7 +159,7 @@ function updateGithubInfo (outerElem, info) {
         }
         appendNode.textContent = [i.text, info[i.id]].join(' ');
         infoElem.appendChild(appendNode);
-        infoElem.appendChild(document.createTextNode(delimeter));
+        infoElem.appendChild(document.createTextNode(DELIMETER));
     }
     // Remove the last delimeter
     infoElem.removeChild(infoElem.lastChild);
@@ -164,8 +167,7 @@ function updateGithubInfo (outerElem, info) {
 }
 
 function run () {
-    let regexp = '^(http(s)?://)?(www.)?google(.[a-zA-Z]{2,8}){1,2}/search?';
-    if (!window.location.href.match(new RegExp(regexp))) return;
+    if (!window.location.href.match(new RegExp(REGEX.GOOGLE))) return;
 
     // TODO currently we store the Github token as "storage.token" but later it should be an Object of all the various
     // tokens and giving all tokens to every element as a parameter is not sufficent so restructuring is due
@@ -174,7 +176,7 @@ function run () {
         console.log(storage);
         token = storage.token;
         config = storage.config;
-        document.querySelectorAll('#rso .g').forEach(elem => getUrl(elem));
+        document.querySelectorAll('#rso .g').forEach(elem => parseUrl(elem));
     });
 }
 
