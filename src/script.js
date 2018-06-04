@@ -1,11 +1,5 @@
 const delimeter = ' • ';
-let config;
-let token;
-let tokenInited = false;
-
-chrome.storage.sync.get('config', storedConfig => {
-    config = storedConfig.config;
-});
+let config, token;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request) {
@@ -21,11 +15,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         window.location.reload();
         break;
     case 'removeToken':
-        tokenInited = false;
         window.location.reload();
         break;
     case 'addToken':
-        tokenInited = true;
         window.location.reload();
         break;
     case 'config':
@@ -110,22 +102,13 @@ function timeSince (date) {
 }
 
 function getUrl (elem) {
-    let url = elem.querySelectorAll('h3.r > a')[0];
-    if (url === undefined) return;
-    url = url.href;
+    const url = (elem.querySelector('h3.r > a') || {}).href;
+    if (!url) return;
 
-    let regexp = '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$';
+    const regexp = '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$';
     if (url.match(new RegExp(regexp))) {
         let splitUrl = url.split('/');
-
-        if (!token) {
-            chrome.storage.sync.get('token', storedToken => {
-                token = storedToken.token;
-                getGithubInfo(elem, splitUrl[splitUrl.length - 2], splitUrl[splitUrl.length - 1]);
-            });
-        } else {
-            getGithubInfo(elem, splitUrl[splitUrl.length - 2], splitUrl[splitUrl.length - 1]);
-        }
+        getGithubInfo(elem, splitUrl[splitUrl.length - 2], splitUrl[splitUrl.length - 1]);
     }
 }
 
@@ -163,7 +146,7 @@ function updateGithubInfo (outerElem, info) {
     infoElem.appendChild(divideLine);
 
     for (const i of config.filter(prop => prop.visible)) {
-        const appendType = i.postUrl === undefined || info[i.id] === 'n/a' ? 'span' : 'a';
+        const appendType = !i.postUrl || info[i.id] === 'n/a' ? 'span' : 'a';
         let appendNode = document.createElement(appendType);
 
         if (appendType === 'a') {
@@ -175,25 +158,24 @@ function updateGithubInfo (outerElem, info) {
         infoElem.appendChild(appendNode);
         infoElem.appendChild(document.createTextNode(delimeter));
     }
+    // Remove the last delimeter
     infoElem.removeChild(infoElem.lastChild);
     outerElem.appendChild(infoElem);
 }
 
 function run () {
     let regexp = '^(http(s)?://)?(www.)?google(.[a-zA-Z]{2,8}){1,2}/search?';
-    if (!window.location.href.match(new RegExp(regexp))) {
-        console.log(window.location.href);
-        return;
-    }
+    if (!window.location.href.match(new RegExp(regexp))) return;
 
-    if (!token) {
-        chrome.storage.sync.get('token', storedToken => {
-            token = storedToken.token;
-            if (token) run();
-        });
-    } else {
-        [...document.querySelectorAll('#rso .g')].map(getUrl);
-    }
+    // TODO currently we store the Github token as "storage.token" but later it should be an Object of all the various
+    // tokens and giving all tokens to every element as a parameter is not sufficent so restructuring is due
+    chrome.storage.sync.get(['token', 'config'], storage => {
+        if (!storage.token || !storage.config) return;
+        console.log(storage);
+        token = storage.token;
+        config = storage.config;
+        document.querySelectorAll('#rso .g').forEach(elem => getUrl(elem));
+    });
 }
 
 run();
