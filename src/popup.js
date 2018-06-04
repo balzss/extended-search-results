@@ -67,8 +67,8 @@ function drawControls (config) {
 
 function createButtons () {
     const buttonElems = [
-        createButton('apply', apply),
-        createButton('reset to default', resetDefault),
+        createButton('Apply', apply),
+        createButton('Reset to default', resetDefault),
         createButton('Remove stored access token', removeAccessToken)
     ];
     return appendAll(buttonElems, createElemWithClass('div', 'btn-container'));
@@ -161,7 +161,7 @@ function setupInterface () {
 }
 
 function createNoTokenElem () {
-    let token = createElemWithClass('div', 'container');
+    const token = createElemWithClass('div', 'container');
     token.setAttribute('id', 'token');
     token.innerHTML = noTokenTemplate;
     token.appendChild(createSaveTokenBtn());
@@ -177,7 +177,7 @@ function makeTokenLinkClickable () {
 }
 
 function createSaveTokenBtn () {
-    let tokenBtn = document.createElement('button');
+    const tokenBtn = document.createElement('button');
     tokenBtn.setAttribute('id', 'token-done');
     tokenBtn.addEventListener('click', testToken);
     tokenBtn.textContent = 'done';
@@ -185,13 +185,13 @@ function createSaveTokenBtn () {
 }
 
 function createElemWithClass (tag, _class) {
-    let elem = document.createElement(tag);
+    const elem = document.createElement(tag);
     elem.setAttribute('class', _class);
     return elem;
 }
 
 function testToken () {
-    let token = document.querySelector('#token-input').value;
+    const token = document.querySelector('#token-input').value;
     document.getElementById('error').textContent = '';
 
     fetch('https://api.github.com/graphql', {
@@ -205,10 +205,7 @@ function testToken () {
         if (result.data) {
             console.log('success');
             chrome.storage.sync.set({'token': token}, () => {
-                chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-                    let activeTab = tabs[0];
-                    chrome.tabs.sendMessage(activeTab.id, 'addToken');
-                });
+                reloadActiveTab();
                 setupInterface();
             });
         } else {
