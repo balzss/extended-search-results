@@ -32,7 +32,7 @@ function createConfigElem (e) {
     return {
         id: id,
         text: e.querySelector('.text').value,
-        postUrl: e.dataset.postUrl | '',
+        postUrl: e.dataset.postUrl || '',
         visible: e.querySelector('#' + id).checked
     };
 }
