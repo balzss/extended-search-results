@@ -94,11 +94,11 @@ function githubQuery (owner, repo) {
 }
 
 function timeSince (date) {
-    let seconds = Math.floor((new Date() - date) / 1000);
-    let timeBorders = [31536000, 2592000, 84400, 3600, 60, 1];
-    let timeLabels = [' year', ' month', ' day', ' hour', ' minute', ' second'];
+    const seconds = Math.floor((new Date() - date) / 1000);
+    const timeBorders = [31536000, 2592000, 84400, 3600, 60, 1];
+    const timeLabels = [' year', ' month', ' day', ' hour', ' minute', ' second'];
     for (const [index, value] of timeBorders.entries()) {
-        let interval = Math.floor(seconds / value);
+        const interval = Math.floor(seconds / value);
         if (interval >= 1) {
             return (interval === 1 ? 'a' : interval) + timeLabels[index] + (interval > 1 ? 's' : '') + ' ago';
         }
@@ -118,8 +118,8 @@ function parseUrl (elem) {
 function getGithubInfo (elem, owner, repo) {
     fetch('https://api.github.com/graphql', requestConfig(owner, repo))
         .then(response => response.json()).then(result => {
-            let r = result.data.repository;
-            let infos = {
+            const r = result.data.repository;
+            const infos = {
                 url: owner + '/' + repo,
                 starCount: r.stars.totalCount,
                 openIssues: r.openIssues.totalCount,
@@ -141,16 +141,16 @@ function getGithubInfo (elem, owner, repo) {
 }
 
 function updateGithubInfo (outerElem, info) {
-    let infoElem = document.createElement('div');
+    const infoElem = document.createElement('div');
     infoElem.style.opacity = '0.6';
     infoElem.style.lineHeight = '1.6rem';
-    let divideLine = document.createElement('hr');
+    const divideLine = document.createElement('hr');
     divideLine.style.margin = '6px 0';
     infoElem.appendChild(divideLine);
 
     for (const i of config.filter(prop => prop.visible)) {
         const appendType = !i.postUrl || info[i.id] === 'n/a' ? 'span' : 'a';
-        let appendNode = document.createElement(appendType);
+        const appendNode = document.createElement(appendType);
 
         if (appendType === 'a') {
             appendNode.style.textDecoration = 'underline';
