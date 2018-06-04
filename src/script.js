@@ -5,32 +5,6 @@ const REGEX = {
 };
 let config, token;
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    switch (request) {
-    case 'reset':
-        config = defaultConfig;
-        chrome.storage.sync.set({'config': defaultConfig});
-        window.location.reload();
-        break;
-    case 'apply':
-        chrome.storage.sync.get('config', storedConfig => {
-            config = storedConfig.config;
-        });
-        window.location.reload();
-        break;
-    case 'removeToken':
-        window.location.reload();
-        break;
-    case 'addToken':
-        window.location.reload();
-        break;
-    case 'config':
-        config = defaultConfig;
-        chrome.storage.sync.set({'config': defaultConfig});
-        break;
-    }
-});
-
 function requestConfig (owner, repo) {
     return {
         method: 'POST',
@@ -46,51 +20,51 @@ function requestConfig (owner, repo) {
 
 function githubQuery (owner, repo) {
     return `{
-    repository(owner: "${owner}", name: "${repo}") {
-        stars: stargazers {
-            totalCount
-        }
-        openIssues: issues(states:[OPEN]) {
-            totalCount
-        }
-        allIssues: issues {
-            totalCount
-        }
-        closedIssues: issues(states: [CLOSED]) {
-            totalCount
-        }
-        ref(qualifiedName: "master"){
-            target{
-                ... on Commit{
-                    commitCount: history {
-                        totalCount
+        repository(owner: "${owner}", name: "${repo}") {
+            stars: stargazers {
+                totalCount
+            }
+            openIssues: issues(states:[OPEN]) {
+                totalCount
+            }
+            allIssues: issues {
+                totalCount
+            }
+            closedIssues: issues(states: [CLOSED]) {
+                totalCount
+            }
+            ref(qualifiedName: "master"){
+                target{
+                    ... on Commit{
+                        commitCount: history {
+                            totalCount
+                        }
+                        latestCommit: authoredDate
                     }
-                    latestCommit: authoredDate
                 }
             }
+            forkCount
+            watchers {
+                totalCount
+            }
+            releases {
+                totalCount
+            }
+            license
+            primaryLanguage {
+                name
+            }
+            openPullRequests: pullRequests(states: [OPEN]) {
+                totalCount
+            }
+            closedPullRequests: pullRequests(states: [CLOSED]) {
+                totalCount
+            }
+            allPullRequests: pullRequests {
+                totalCount
+            }
         }
-        forkCount
-        watchers {
-            totalCount
-        }
-        releases {
-            totalCount
-        }
-        license
-        primaryLanguage {
-            name
-        }
-        openPullRequests: pullRequests(states: [OPEN]) {
-            totalCount
-        }
-        closedPullRequests: pullRequests(states: [CLOSED]) {
-            totalCount
-        }
-        allPullRequests: pullRequests {
-            totalCount
-        }
-    }
-}`;
+    }`;
 }
 
 function timeSince (date) {
@@ -173,7 +147,6 @@ function run () {
     // tokens and giving all tokens to every element as a parameter is not sufficent so restructuring is due
     chrome.storage.sync.get(['token', 'config'], storage => {
         if (!storage.token || !storage.config) return;
-        console.log(storage);
         token = storage.token;
         config = storage.config;
         document.querySelectorAll('#rso .g').forEach(elem => parseUrl(elem));
