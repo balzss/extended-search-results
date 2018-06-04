@@ -23,7 +23,8 @@ function apply () {
     }
 
     chrome.storage.sync.set({'config': newConfig}, () => {
-        sendMsgToActiveTab('apply', window.close);
+        reloadActiveTab();
+        window.close();
     });
 }
 
@@ -38,24 +39,20 @@ function createConfigElem (e) {
 }
 
 function resetDefault () {
-    sendMsgToActiveTab('reset', window.close);
+    chrome.storage.sync.set({'config': defaultConfig}, () => {
+        reloadActiveTab();
+        window.close();
+    });
 }
 
 function removeAccessToken () {
     chrome.storage.sync.remove('token');
-    sendMsgToActiveTab('removeToken');
+    reloadActiveTab();
     setupInterface();
 }
 
-function sendMsgToActiveTab (message, cb = () => {}) {
-    chrome.tabs.query({currentWindow: true, active: true}, tabs => {
-        chrome.tabs.sendMessage(getActiveTab(tabs).id, message);
-        cb();
-    });
-}
-
-function getActiveTab (tabs) {
-    return tabs[0];
+function reloadActiveTab () {
+    chrome.tabs.reload();
 }
 
 function drawControls (config) {
