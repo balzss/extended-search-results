@@ -197,15 +197,14 @@ function testToken () {
         })
     }).then(response => response.json()).then(result => {
         if (result.data) {
-            console.log('success');
-            chrome.storage.sync.set({'token': token}, () => {
+            return chrome.storage.sync.set({'token': token}, () => {
                 reloadActiveTab();
                 setupInterface();
             });
-        } else {
-            document.getElementById('error').textContent = 'Couldn\'t validate token. Please try again!';
-            document.getElementById('token-input').value = '';
         }
+
+        document.getElementById('error').textContent = 'Couldn\'t validate token. Please try again!';
+        document.getElementById('token-input').value = '';
     });
 }
 
