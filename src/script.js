@@ -1,10 +1,17 @@
 const DELIMETER = ' • ';
-const REGEX = {
+const INFO_STYLE = Object.freeze({
+    opacity: '0.6',
+    lineHeight: '1.6rem',
+    borderTop: '1px solid #ccc',
+    marginTop: '6px',
+    paddingTop: '6px'
+});
+const REGEX = Object.freeze({
     GOOGLE: '^(http(s)?://)?(www.)?google(.[a-zA-Z]{2,8}){1,2}/search?',
-    GITHUB: '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}$',
+    GITHUB: '^http(s)?://github.com(/[-a-zA-Z0-9@:%_+.~#?&=]+){2}',
     STACKOVERFLOW: '^http(s)?://stackoverflow.com/(q|questions)/[0-9]+'
-};
-const infoDomains = [
+});
+const INFO_DOMAINS = Object.freeze([
     {
         name: 'Github',
         regex: new RegExp(REGEX.GITHUB),
