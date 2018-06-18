@@ -22,8 +22,22 @@ const INFO_DOMAINS = Object.freeze([
         regex: new RegExp(REGEX.STACKOVERFLOW),
         getInfo: getStackoverflowInfo
     }
-];
+]);
+// api key for the stack exchange api to get more requests. this is not a secret
+const STACKOVERFLOW_KEY = 'qekFGNqdYS7scJizqo3yYQ((';
 let config, token;
+
+function timeSince (date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    const timeBorders = [31536000, 2592000, 84400, 3600, 60, 1];
+    const timeLabels = [' year', ' month', ' day', ' hour', ' minute', ' second'];
+    for (const [index, value] of timeBorders.entries()) {
+        const interval = Math.floor(seconds / value);
+        if (interval >= 1) {
+            return (interval === 1 ? 'a' : interval) + timeLabels[index] + (interval > 1 ? 's' : '') + ' ago';
+        }
+    }
+}
 
 function googleScraper () {
     // TODO currently we store the Github token as "storage.token" but later it should be an Object of all the various
@@ -39,13 +53,14 @@ function googleScraper () {
 function parseUrl (elem) {
     const url = (elem.querySelector('h3.r > a') || {}).href;
     if (!url) return false;
-    infoDomains.some(i => url.match(i.regex) ? i.getInfo(elem, url) : false);
+    INFO_DOMAINS.some(i => (url.match(i.regex) ? i.getInfo(elem, url) : false));
 }
 
 function getGithubInfo (elem, url) {
-    const [,,, owner, repo] = url.split('/');
+    const [, , , owner, repo] = url.split('/');
     fetch('https://api.github.com/graphql', requestConfig(owner, repo))
-        .then(response => response.json()).then(result => {
+        .then(response => response.json())
+        .then(result => {
             const r = result.data.repository;
             const infos = {
                 url: owner + '/' + repo,
@@ -70,11 +85,7 @@ function getGithubInfo (elem, url) {
 
 function updateGithubInfo (outerElem, info) {
     const infoElem = document.createElement('div');
-    infoElem.style.opacity = '0.6';
-    infoElem.style.lineHeight = '1.6rem';
-    const divideLine = document.createElement('hr');
-    divideLine.style.margin = '6px 0';
-    infoElem.appendChild(divideLine);
+    Object.assign(infoElem.style, INFO_STYLE);
 
     for (const i of config.filter(prop => prop.visible)) {
         const appendType = !i.postUrl || info[i.id] === 'n/a' ? 'span' : 'a';
@@ -102,7 +113,7 @@ function requestConfig (owner, repo) {
         }),
         headers: new Headers({
             'Content-Type': 'application/json',
-            'Authorization': 'bearer ' + token
+            Authorization: 'bearer ' + token
         })
     };
 }
@@ -156,40 +167,22 @@ function githubQuery (owner, repo) {
     }`;
 }
 
-function timeSince (date) {
-    const seconds = Math.floor((new Date() - date) / 1000);
-    const timeBorders = [31536000, 2592000, 84400, 3600, 60, 1];
-    const timeLabels = [' year', ' month', ' day', ' hour', ' minute', ' second'];
-    for (const [index, value] of timeBorders.entries()) {
-        const interval = Math.floor(seconds / value);
-        if (interval >= 1) {
-            return (interval === 1 ? 'a' : interval) + timeLabels[index] + (interval > 1 ? 's' : '') + ' ago';
-        }
-    }
-}
-
 function getStackoverflowInfo (elem, url) {
-    const [,,,, id] = url.split('/');
-    fetch(`https://api.stackexchange.com/2.2/questions/${id}?site=stackoverflow`)
-        .then(response => response.json()).then(result => {
-            console.log(result.items[0]);
+    const [, , , , id] = url.split('/');
+    fetch(`https://api.stackexchange.com/2.2/questions/${id}?site=stackoverflow&key=${STACKOVERFLOW_KEY}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.items.length <= 0) return;
             updateStackoverflowInfo(elem, result.items[0]);
         });
 }
 
 function updateStackoverflowInfo (outerElem, info) {
     const infoElem = document.createElement('div');
-    infoElem.style.opacity = '0.6';
-    infoElem.style.lineHeight = '1.6rem';
-    const divideLine = document.createElement('hr');
-    divideLine.style.margin = '6px 0';
-    infoElem.appendChild(divideLine);
+    Object.assign(infoElem.style, INFO_STYLE);
 
     for (const i in info) {
-        console.log(i);
-        const appendNode = document.createElement('span');
-        appendNode.textContent = `${i}: ${info[i]}`;
-        infoElem.appendChild(appendNode);
+        infoElem.appendChild(document.createTextNode(`${i}: ${info[i]}`));
         infoElem.appendChild(document.createTextNode(DELIMETER));
     }
     // Remove the last delimeter
